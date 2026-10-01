@@ -1,0 +1,30 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  loadData: () => ipcRenderer.invoke('db-load'),
+  saveData: (data) => ipcRenderer.invoke('db-save', data),
+  getFirebaseUrl: () => ipcRenderer.invoke('get-firebase-url'),
+  setFirebaseUrl: (url) => ipcRenderer.invoke('set-firebase-url', url),
+  getActiveProfile: () => ipcRenderer.invoke('get-active-profile'),
+  switchProfile: (profile) => ipcRenderer.invoke('set-active-profile', profile),
+  getChurchPin: () => ipcRenderer.invoke('get-church-pin'),
+  setChurchPin: (pin) => ipcRenderer.invoke('set-church-pin', pin),
+  getAllPersonalProfiles: () => ipcRenderer.invoke('get-all-personal-profiles'),
+  copyReceipt: (filePath) => ipcRenderer.invoke('copy-receipt', filePath),
+  exportExcel: (data) => ipcRenderer.invoke('export-excel', data),
+  createBackup: (data) => ipcRenderer.invoke('create-backup', data),
+  importData: () => ipcRenderer.invoke('import-data'),
+  openFile: (filePath) => ipcRenderer.invoke('open-file', filePath),
+  getServerInfo: () => ipcRenderer.invoke('get-server-info'),
+  onServerInfoReady: (callback) => ipcRenderer.on('server-info-ready', (event, info) => callback(info)),
+  onRemoteDataUpdated: (callback) => ipcRenderer.on('remote-data-updated', () => callback()),
+  onPersonalDataUpdated: (callback) => ipcRenderer.on('personal-data-updated', (event, deviceId) => callback(deviceId)),
+  onAdminRequest: (callback) => ipcRenderer.on('admin-request', (event, req) => callback(req)),
+  onAdminRequestsUpdated: (callback) => ipcRenderer.on('admin-requests-updated', (event, reqs) => callback(reqs)),
+  setAdminRequestStatus: (deviceId, status) => ipcRenderer.invoke('set-admin-request-status', { deviceId, status }),
+  getPendingAdminRequests: () => ipcRenderer.invoke('get-pending-admin-requests'),
+  savePersonalProfile: (deviceId, profileData) => ipcRenderer.invoke('save-personal-profile', { deviceId, profileData }),
+  windowMinimize: () => ipcRenderer.send('window-minimize'),
+  windowMaximize: () => ipcRenderer.send('window-maximize'),
+  windowClose: () => ipcRenderer.send('window-close')
+});

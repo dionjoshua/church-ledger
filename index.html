@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Church Administration & Real Estate Ledger</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Apple Frameless Window Titlebar -->
+  <header class="app-titlebar">
+    <div class="window-controls">
+      <button class="control-btn close" id="win-close" title="Close"></button>
+      <button class="control-btn minimize" id="win-minimize" title="Minimize"></button>
+      <button class="control-btn maximize" id="win-maximize" title="Maximize"></button>
+    </div>
+    <div class="app-title">CHURCH LEDGER & REAL ESTATE VAULT</div>
+    <div class="titlebar-actions">
+      <select id="profile-switcher" style="background: var(--light-slate); color: var(--velvet-black); border: 1px solid var(--subtle-slate); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; outline: none; margin-right: 8px; cursor: pointer; font-family: inherit; height: 28px; vertical-align: middle;">
+        <option value="church">⛪ Redemption House (Church)</option>
+        <option value="personal">👤 Personal Ledger</option>
+      </select>
+      <button class="btn btn-secondary btn-sm" id="btn-backup">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Backup Vault
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-import">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" transform="rotate(180 12 12)"/></svg>
+        Import Backup
+      </button>
+      <button class="btn btn-primary btn-sm" id="btn-export">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Export to Excel
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">COMMAND CENTER</div>
+        <button class="nav-item active" data-view="dashboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard Analytics
+        </button>
+        <button class="nav-item" data-view="grid">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          Master Ledger Grid
+        </button>
+        <button class="nav-item" data-view="tenants">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Room & Tenant Setup
+        </button>
+        <button class="nav-item" data-view="governance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Financial Governance
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <!-- Mobile Access Panel -->
+        <div class="mobile-access-panel" id="mobile-access-panel" style="display:none;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: #7c7cff; margin-bottom: 10px; text-align: center;">MOBILE ACCESS</div>
+          <div id="qr-code-container" style="display: flex; justify-content: center; margin-bottom: 10px;">
+            <img id="qr-code-img" src="" alt="QR Code" style="width: 120px; height: 120px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);"/>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <input type="text" id="server-url-display" readonly style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #f0f0f5; font-size: 11px; font-weight: 600; padding: 6px 10px; font-family: 'SF Mono', 'Fira Code', monospace; outline: none; cursor: text;">
+            <button id="btn-copy-url" class="btn btn-secondary btn-sm" style="padding: 5px 8px; font-size: 10px; white-space: nowrap;" title="Copy URL">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+          <div style="font-size: 10px; color: #56566a; text-align: center; line-height: 1.4;">Scan QR or enter URL on phone<br/>Same WiFi network required</div>
+
+          <!-- Firebase Cloud Sync -->
+          <div style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;color:#7c7cff;margin-bottom:6px;">☁️ CLOUD SYNC (OPTIONAL)</div>
+            <input type="url" id="firebase-url-input" placeholder="Firebase DB URL..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#f0f0f5;font-size:10px;padding:6px 8px;outline:none;margin-bottom:4px;font-family:monospace;">
+            <button onclick="saveFirebaseUrl()" style="width:100%;background:rgba(108,108,255,0.2);border:1px solid rgba(108,108,255,0.3);border-radius:5px;color:#9c9cff;font-size:10px;font-weight:700;padding:5px;cursor:pointer;">Save Firebase URL</button>
+            <div id="firebase-url-status" style="font-size:9px;color:#56566a;text-align:center;margin-top:4px;"></div>
+          </div>
+
+          <!-- Church Mobile PIN -->
+          <div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;color:#f0c040;margin-bottom:6px;">🔐 CHURCH MOBILE PIN</div>
+            <div style="font-size:9px;color:#56566a;margin-bottom:6px;">Phones must enter this PIN to access church data.</div>
+            <input type="password" id="church-pin-input" placeholder="Enter PIN (default: 1234)" maxlength="8"
+              style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:6px;color:#f0f0f5;font-size:14px;font-weight:700;padding:6px 8px;outline:none;margin-bottom:4px;letter-spacing:4px;text-align:center;">
+            <button onclick="saveChurchPin()" style="width:100%;background:rgba(240,192,64,0.15);border:1px solid rgba(240,192,64,0.3);border-radius:5px;color:#f0c040;font-size:10px;font-weight:700;padding:5px;cursor:pointer;">Set Church PIN 🔐</button>
+            <div id="church-pin-status" style="font-size:9px;color:#56566a;text-align:center;margin-top:4px;"></div>
+          </div>
+
+          <!-- Personal Profiles Monitor -->
+          <div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:1px;color:#4ecb71;">👥 PERSONAL PROFILES</div>
+              <button onclick="refreshPersonalProfiles()" style="background:none;border:none;color:#4ecb71;font-size:9px;cursor:pointer;padding:0;">↻ Refresh</button>
+            </div>
+            <div id="personal-profiles-list" style="font-size:9px;color:#56566a;">Click Refresh to load profiles...</div>
+          </div>
+
+          <!-- Admin Requests Monitor -->
+          <div id="admin-requests-section" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;color:#ff9f0a;margin-bottom:6px;">🛡️ PENDING ADMIN REQUESTS</div>
+            <div id="admin-requests-list" style="font-size:9px;color:#56566a;"></div>
+          </div>
+        </div>
+
+        <div class="vault-status">
+          <span class="status-indicator online"></span>
+          <span class="status-text">OFFLINE LOCAL VAULT SECURE</span>
+        </div>
+        <div class="app-version">Version 1.0.0 (Windows)</div>
+      </div>
+    </aside>
+
+    <!-- Main View Window -->
+    <main class="app-main-viewport">
+      
+      <!-- VIEW 1: EXECUTIVE ANALYTICS COMMAND CENTER -->
+      <section id="view-dashboard" class="view-pane active">
+        <div class="view-header flex-header" style="justify-content: space-between; align-items: center;">
+          <div>
+            <h1 class="view-title">Executive Analytics</h1>
+            <p class="view-subtitle">Ministry capital streams and facility yield overview</p>
+          </div>
+          <div class="header-actions">
+            <select id="analytics-filter" class="cell-editor" style="width: 180px; padding: 6px 12px;">
+              <option value="all">All Time (2026)</option>
+              <option value="q1">Q1 (Jan - Mar)</option>
+              <option value="q2">Q2 (Apr - Jun)</option>
+              <option value="q3">Q3 (Jul - Sep)</option>
+              <option value="q4">Q4 (Oct - Dec)</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Telemetry Cards -->
+        <div class="telemetry-grid">
+          <div class="telemetry-card dual-metric">
+            <div class="card-meta">GLOBAL VAULT BALANCE</div>
+            <div class="split-metric">
+              <div class="sub-metric">
+                <span class="sub-label">Spendable Liquid Assets</span>
+                <span class="card-value" id="metric-liquid-assets">Rs 0.00</span>
+                <span id="metric-period-assets" style="font-size: 11px; font-weight: 600; color: var(--apple-secondary); display: none; margin-top: 4px;"></span>
+              </div>
+              <div class="sub-metric fixed-reserves">
+                <span class="sub-label">Permanent Fixed Reserves</span>
+                <span class="card-value" id="metric-fixed-reserves">Rs 0.00</span>
+              </div>
+            </div>
+            <div class="card-desc" style="margin-top: 12px; font-size: 11px;">Total Net Capital separated by liquidity.</div>
+          </div>
+          <div class="telemetry-card">
+            <div class="card-meta">CUMULATIVE SUNDAY COLLECTIONS</div>
+            <div class="card-value" id="metric-sunday-collections">Rs 0.00</div>
+            <div class="card-desc">Tithes and General Offerings</div>
+          </div>
+          <div class="telemetry-card">
+            <div class="card-meta">GROSS REAL ESTATE YIELD</div>
+            <div class="card-value" id="metric-estate-yield">Rs 0.00</div>
+            <div class="card-desc">Total Sub-leased Room Inflows</div>
+          </div>
+          <div class="telemetry-card">
+            <div class="card-meta">TOTAL OPERATING EXPENSES</div>
+            <div class="card-value" id="metric-operating-losses">Rs 0.00</div>
+            <div class="card-desc">Facility Costs and Operational Outgoings</div>
+          </div>
+        </div>
+
+        <!-- SVG Chart Panel -->
+        <div class="chart-panel">
+          <div class="chart-header">
+            <h2 class="panel-section-title">Capital Flows: Revenue Gains vs Operating Expenses</h2>
+            <div class="chart-legends">
+              <span class="legend-item"><span class="legend-dot color-revenue"></span>Weekly Collections (Inflows)</span>
+              <span class="legend-item"><span class="legend-dot color-expense"></span>Weekly Expenses (Outflows)</span>
+            </div>
+          </div>
+          <div class="chart-container" id="dashboard-chart-container">
+            <!-- Dynamic SVG chart will be rendered here -->
+            <svg id="dashboard-svg-chart" width="100%" height="320" style="display: block;"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: SUNDAY-BY-SUNDAY MASTER GRID WORKSPACE -->
+      <section id="view-grid" class="view-pane">
+        <div class="view-header flex-header">
+          <div>
+            <h1 class="view-title">Master Ledger Grid</h1>
+            <p class="view-subtitle">Excel-fluid Sunday weekly cycles, sub-ledgers, and cascading reserves</p>
+          </div>
+          <div class="grid-actions">
+            <input type="text" class="input-search" id="grid-search" placeholder="Search date or description...">
+            <button class="btn btn-secondary" id="btn-add-column">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Column
+            </button>
+            <button class="btn btn-primary" id="btn-add-sunday">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Row
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-table-container">
+          <table class="excel-grid" id="main-ledger-grid">
+            <thead>
+              <tr id="grid-header-row">
+                <!-- Column headers will be dynamically inserted here -->
+              </tr>
+            </thead>
+            <tbody id="grid-body">
+              <!-- Chronological Sunday Rows will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 3: ROOM & TENANT SETUP -->
+      <section id="view-tenants" class="view-pane">
+        <div class="view-header flex-header">
+          <div>
+            <h1 class="view-title">Room & Tenant Setup</h1>
+            <p class="view-subtitle">Define structural sub-leases and monthly base fee rentals</p>
+          </div>
+          <button class="btn btn-primary" id="btn-add-tenant-config">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add New Room/Tenant
+          </button>
+        </div>
+
+        <div class="panel-card">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>Occupant / Room Name</th>
+                <th>Monthly Base Lease Rate (Rs)</th>
+                <th>Identifier/Key</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tenant-settings-body">
+              <!-- Dynamic Roster Config Rows -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 4: FINANCIAL GOVERNANCE -->
+      <section id="view-governance" class="view-pane">
+        <div class="view-header">
+          <h1 class="view-title">Financial Governance</h1>
+          <p class="view-subtitle">Landlord Lease ledgers and Fixed Deposit repositories</p>
+        </div>
+
+        <div class="governance-grid">
+          <!-- Building Lease Ledger -->
+          <div class="gov-card">
+            <div class="card-meta">BUILDING LEASE LEDGER</div>
+            <p class="view-subtitle" style="margin-bottom: 12px;">Monthly rent payments to primary landlord</p>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: nowrap;">
+              <label style="font-size: 12px; font-weight: 600; color: var(--apple-secondary); white-space: nowrap;">Base Monthly Rent (Rs)</label>
+              <input type="number" id="landlord-base-rent" class="cell-editor" style="width: 130px; flex-shrink: 0;" placeholder="0.00">
+            </div>
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Total Due</th>
+                  <th>Amount Paid</th>
+                  <th>Remaining</th>
+                  <th style="text-align: right;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="landlord-ledger-body">
+                <!-- Dynamically populated 12 months -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Fixed Deposit Vault -->
+          <div class="gov-card">
+            <div class="flex-header" style="margin-bottom: 16px;">
+              <div>
+                <div class="card-meta">FIXED DEPOSIT REPOSITORY</div>
+                <span class="sub-label">Locked non-liquid capital reserves</span>
+              </div>
+              <button class="btn btn-primary" id="btn-add-fd">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Log Deposit
+              </button>
+            </div>
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th>Institution</th>
+                  <th>Principal</th>
+                  <th>Maturity</th>
+                  <th>Interest</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="fd-vault-body">
+                <!-- Fixed deposits injected here -->
+              </tbody>
+          </div>
+
+          <!-- Capital Loans & Deposits -->
+          <div class="gov-card">
+            <div class="flex-header" style="margin-bottom: 16px;">
+              <div>
+                <div class="card-meta">CAPITAL LOANS & DEPOSITS</div>
+                <span class="sub-label">Refundable leases, security deposits, and church loans</span>
+              </div>
+              <button class="btn btn-primary" id="btn-add-loan">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Log Loan/Deposit
+              </button>
+            </div>
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Total Target</th>
+                  <th>Paid So Far</th>
+                  <th>Balance</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="loan-vault-body">
+                <!-- Loans and deposits injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- POPUP MODAL: ADD TRANSACTION (Apple Settings style Card) -->
+  <div class="modal-backdrop" id="modal-transaction">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Record Flow / Outgoing</h3>
+        <button class="modal-close-btn" id="modal-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Tab selector Inflow/Outflow -->
+        <div class="flow-switch-container">
+          <button class="flow-tab active" data-flow="inflow">INFLOW (Receipt)</button>
+          <button class="flow-tab" data-flow="outflow">OUTFLOW (Expense)</button>
+        </div>
+
+        <form id="transaction-form" class="modal-form">
+          <div class="form-group">
+            <label for="txn-date-select">Anchor Sunday Date</label>
+            <select id="txn-date-select" required>
+              <!-- Sunday dropdown list populated dynamically -->
+            </select>
+          </div>
+
+          <div id="group-inflow-type" class="form-group">
+            <label for="txn-inflow-type">Inflow Source / Category</label>
+            <select id="txn-inflow-type">
+              <option value="offering">Sunday Collections (Tithes & General)</option>
+              <option value="tenant">Room/Tenant Rent Payment</option>
+            </select>
+          </div>
+
+          <div id="group-tenant-select" class="form-group hidden">
+            <label for="txn-tenant-select">Select Room / Tenant</label>
+            <select id="txn-tenant-select">
+              <!-- Dynamically populated room options -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="txn-description">Description / Tracking Memo</label>
+            <input type="text" id="txn-description" placeholder="e.g. Electricity bill, Special Offering, Jan 2026 rent" required>
+          </div>
+
+          <div class="form-group">
+            <label for="txn-amount">Amount (Rs)</label>
+            <input type="number" id="txn-amount" step="0.01" min="0.00" placeholder="0.00" required>
+          </div>
+
+          <!-- Drag and Drop Receipt Attachment -->
+          <div class="form-group" id="group-receipt-uploader">
+            <label>Receipt Attachment (.jpg, .png, .pdf)</label>
+            <div class="receipt-drop-zone" id="receipt-dropzone">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <p class="dropzone-text">Drag & Drop Receipt file here, or click to browse</p>
+              <input type="file" id="receipt-file-input" accept="image/png, image/jpeg, application/pdf" class="hidden-file-input">
+              <div class="attached-file-info hidden" id="attached-file-info">
+                <span class="file-name" id="attached-file-name">No file</span>
+                <button type="button" class="btn-clear-file" id="btn-clear-receipt">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Transaction</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL: ADD TENANT -->
+  <div class="modal-backdrop" id="modal-tenant">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Room / Tenant</h3>
+        <button class="modal-close-btn" id="modal-tenant-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="tenant-form" class="modal-form">
+          <div class="form-group">
+            <label for="tenant-room-name">Occupant / Room Name</label>
+            <input type="text" id="tenant-room-name" placeholder="e.g. Room 4, Cafe Operator" required>
+          </div>
+          <div class="form-group">
+            <label for="tenant-base-rate">Monthly Base Rent Rate (Rs)</label>
+            <input type="number" id="tenant-base-rate" step="0.01" min="0.00" placeholder="0.00" required>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-tenant-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Room</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL: ADD COLUMN -->
+  <div class="modal-backdrop" id="modal-column">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Custom Column</h3>
+        <button class="modal-close-btn" id="modal-column-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="column-form" class="modal-form">
+          <div class="form-group">
+            <label for="column-name">Column Header Label</label>
+            <input type="text" id="column-name" placeholder="e.g. Special Project Fund" required>
+          </div>
+          <div class="form-group">
+            <label for="column-type">Column Data Type</label>
+            <select id="column-type" required>
+              <option value="inflow">Dynamic Income (Inflow)</option>
+              <option value="outflow">Dynamic Expenses (Outflow)</option>
+              <option value="text">Ledger Memos (Text)</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-column-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Column</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL: ADD ROW -->
+  <div class="modal-backdrop" id="modal-row">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Sunday Row</h3>
+        <button class="modal-close-btn" id="modal-row-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="row-form" class="modal-form">
+          <div class="form-group">
+            <label for="row-date">Sunday Date (YYYY-MM-DD)</label>
+            <input type="text" id="row-date" placeholder="2026-01-04" required>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-row-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Inject Row</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL: FIXED DEPOSIT -->
+  <div class="modal-backdrop" id="modal-fd">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Log Fixed Deposit</h3>
+        <button class="modal-close-btn" id="modal-fd-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="fd-form" class="modal-form">
+          <div class="form-group">
+            <label for="fd-bank">Institution / Bank Name</label>
+            <input type="text" id="fd-bank" placeholder="e.g. Commercial Bank" required>
+          </div>
+          <div class="form-group">
+            <label for="fd-account">Certificate / Account Number</label>
+            <input type="text" id="fd-account" placeholder="e.g. 10023940192" required>
+          </div>
+          <div class="form-group">
+            <label for="fd-principal">Principal Invested (Rs)</label>
+            <input type="number" id="fd-principal" step="0.01" placeholder="500000.00" required>
+          </div>
+          <div class="form-group">
+            <label for="fd-maturity">Maturity Date</label>
+            <input type="date" id="fd-maturity" required>
+          </div>
+          <div class="form-group">
+            <label for="fd-rate">Interest Rate (%)</label>
+            <input type="number" id="fd-rate" step="0.01" placeholder="8.5" required>
+          </div>
+          <div class="form-group">
+            <label for="fd-notes">Notes / Purpose</label>
+            <input type="text" id="fd-notes" placeholder="e.g. Building Purchase Fund">
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-fd-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Lock Capital</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- POPUP MODAL: LOANS & DEPOSITS -->
+  <div class="modal-backdrop" id="modal-loan">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-loan-title">Log Capital Loan / Deposit</h3>
+        <button class="modal-close-btn" id="modal-loan-close-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="loan-form" class="modal-form">
+          <input type="hidden" id="loan-id-hidden">
+          <div class="form-group">
+            <label for="loan-title">Title / Description</label>
+            <input type="text" id="loan-title" placeholder="e.g. Church Building Lease Deposit" required>
+          </div>
+          <div class="form-group">
+            <label for="loan-type">Type of Agreement</label>
+            <select id="loan-type" required>
+              <option value="deposit">Refundable Deposit (We Pay / Receive Back)</option>
+              <option value="loan_taken">Loan Taken (We Owe / Pay Back)</option>
+              <option value="loan_given">Loan Given (We Lent / Get Paid Back)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="loan-target">Total Target Amount (Rs)</label>
+            <input type="number" id="loan-target" step="0.01" placeholder="3000000.00" required>
+          </div>
+          <!-- Payments History Panel -->
+          <div class="form-group">
+            <label>Payments History Ledger</label>
+            <div class="payments-ledger-container">
+              <div class="payments-table-wrapper">
+                <table class="payments-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Amount (Rs)</th>
+                      <th style="width: 50px; text-align: center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="loan-payments-tbody">
+                    <!-- Dynamic payments list -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Inline form to add payment -->
+              <div class="payments-add-form">
+                <div class="form-group">
+                  <label for="new-payment-date">Payment Date</label>
+                  <input type="date" id="new-payment-date" value="2026-06-09">
+                </div>
+                <div class="form-group">
+                  <label for="new-payment-amount">Amount (Rs)</label>
+                  <input type="number" id="new-payment-amount" step="0.01" placeholder="e.g. 20000">
+                </div>
+                <button type="button" class="btn-add-payment" id="btn-add-loan-payment">+ Add</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Live totals summary -->
+          <div class="payments-summary">
+            <div class="sum-item">
+              <label>Target Amount</label>
+              <div class="val" id="summary-loan-target">Rs. 0.00</div>
+            </div>
+            <div class="sum-item">
+              <label>Total Paid</label>
+              <div class="val settled" id="summary-loan-paid">Rs. 0.00</div>
+            </div>
+            <div class="sum-item">
+              <label>Remaining</label>
+              <div class="val remaining" id="summary-loan-remaining">Rs. 0.00</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loan-notes">Notes / Conditions</label>
+            <input type="text" id="loan-notes" placeholder="e.g. To be returned when we vacate the premises">
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-loan-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-loan">Save Agreement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

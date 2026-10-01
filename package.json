@@ -1,0 +1,50 @@
+{
+  "name": "church-ledger-real-estate",
+  "version": "1.0.0",
+  "description": "Church Administration and Ministry Real Estate Ledger",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server.js",
+    "package": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "qrcode": "^1.5.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^30.5.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.church.ledger",
+    "productName": "ChurchLedger",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Church Ledger"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "index.html",
+      "style.css",
+      "renderer.js",
+      "mobile/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

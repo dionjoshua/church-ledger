@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Electron build output
+dist/
+
+# Local data (keep App_Data out of git for privacy/security)
+App_Data/
+*.json.tmp
+church_ledger_error.log
+
+# Compiled APK
+app-debug.apk
+*.apk
+
+# Android build outputs
+android-app/.gradle/
+android-app/app/build/
+android-app/local.properties
+android-app/.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.local
