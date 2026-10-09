@@ -1,0 +1,32 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "android-app/**",
+      "App_Data/**",
+      "dist/**",
+      "scratch/**",
+      "*.apk",
+      "*.tmp",
+      "*.log"
+    ],
+    "rewrites": [
+      {
+        "source": "/mobile",
+        "destination": "/mobile/index.html"
+      },
+      {
+        "source": "/mobile/**",
+        "destination": "/mobile/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
