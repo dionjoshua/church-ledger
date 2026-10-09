@@ -115,6 +115,9 @@ async function init() {
       }
     });
 
+    // Initialize Theme (Default: Dark Theme)
+    initTheme();
+
     recalculateLedger();
     updateTitheAutocompleteDatalists();
     setupEventListeners();
@@ -126,6 +129,39 @@ async function init() {
     setInterval(pollAdminRequests, 10000);
   } catch (err) {
     console.error('Failed to load application data:', err);
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('church_ledger_theme') || 'dark';
+  applyTheme(savedTheme);
+
+  const themeBtn = document.getElementById('btn-theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const current = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      if (currentView === 'dashboard') {
+        renderDashboard();
+      }
+    });
+  }
+}
+
+function applyTheme(theme) {
+  const icon = document.getElementById('theme-icon');
+  const text = document.getElementById('theme-text');
+  if (theme === 'dark') {
+    document.body.classList.add('dark-theme');
+    localStorage.setItem('church_ledger_theme', 'dark');
+    if (icon) icon.textContent = '🌙';
+    if (text) text.textContent = 'Dark';
+  } else {
+    document.body.classList.remove('dark-theme');
+    localStorage.setItem('church_ledger_theme', 'light');
+    if (icon) icon.textContent = '☀️';
+    if (text) text.textContent = 'Light';
   }
 }
 

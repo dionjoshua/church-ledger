@@ -1559,3 +1559,308 @@ input:checked + .toggle-slider:before {
 }
 
 
+
+/* ==========================================================================
+   EXECUTIVE APPLE DARK THEME SYSTEM
+   ========================================================================== */
+
+body.dark-theme {
+  --velvet-black: #0b0b10;
+  --velvet-hover: #161624;
+  --paper-white: #14141f;
+  --silk-gray: #0c0c12;
+  --alternate-gray: #101018;
+  --subtle-slate: #242436;
+  --dark-border: #202030;
+  --charcoal: #e2e2ec;
+  --apple-text: #f0f0f8;
+  --apple-secondary: #9090a6;
+
+  --apple-green-bg: rgba(52, 199, 89, 0.14);
+  --apple-green-text: #4ecb71;
+  --apple-green-solid: #34c759;
+
+  --apple-red-bg: rgba(255, 69, 58, 0.14);
+  --apple-red-text: #ff6b6b;
+  --apple-red-solid: #ff453a;
+
+  background-color: var(--silk-gray);
+  color: var(--apple-text);
+}
+
+/* Scrollbar in Dark Mode */
+body.dark-theme ::-webkit-scrollbar-track {
+  background: #0c0c12;
+}
+body.dark-theme ::-webkit-scrollbar-thumb {
+  background: #28283c;
+  border-radius: 4px;
+}
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #3e3e56;
+}
+
+/* Titlebar & Sidebar in Dark Mode */
+body.dark-theme .app-titlebar {
+  background-color: #0c0c12;
+  border-bottom: 1px solid #1e1e2c;
+  color: #f0f0f8;
+}
+
+body.dark-theme .app-sidebar {
+  background-color: #0c0c12;
+  border-right: 1px solid #1e1e2c;
+}
+
+body.dark-theme .nav-section-title {
+  color: #5d5d74;
+}
+
+body.dark-theme .nav-item {
+  color: #8c8ca4;
+}
+
+body.dark-theme .nav-item svg {
+  color: #8c8ca4;
+}
+
+body.dark-theme .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+body.dark-theme .nav-item:hover svg {
+  color: #ffffff;
+}
+
+body.dark-theme .nav-item.active {
+  background-color: #7c7cff;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(124, 124, 255, 0.35);
+}
+
+body.dark-theme .nav-item.active svg {
+  color: #ffffff;
+}
+
+/* View Header & Titles */
+body.dark-theme .view-title {
+  color: #f5f5fc;
+}
+
+body.dark-theme .view-subtitle {
+  color: #8888a0;
+}
+
+body.dark-theme .panel-section-title {
+  color: #f0f0fa;
+}
+
+/* Cards & Panels */
+body.dark-theme .telemetry-card,
+body.dark-theme .chart-panel,
+body.dark-theme .grid-table-container,
+body.dark-theme .gov-card,
+body.dark-theme .settings-panel,
+body.dark-theme .modal-dialog,
+body.dark-theme .month-bracket-container,
+body.dark-theme .payments-summary,
+body.dark-theme .breakdown-panel,
+body.dark-theme .outgoings-panel {
+  background-color: #141420;
+  border-color: #242436;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .card-value {
+  color: #ffffff;
+}
+
+body.dark-theme .card-desc {
+  color: #8888a0;
+}
+
+body.dark-theme .card-meta {
+  color: #787894;
+}
+
+/* Buttons */
+body.dark-theme .btn-secondary {
+  background-color: #1a1a28;
+  border-color: #2a2a3e;
+  color: #e2e2f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .btn-secondary:hover {
+  background-color: #242436;
+  border-color: #3a3a52;
+  color: #ffffff;
+}
+
+body.dark-theme .btn-primary {
+  background: linear-gradient(135deg, #6060ff, #8257e5);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(108, 108, 255, 0.3);
+}
+
+body.dark-theme .btn-primary:hover {
+  background: linear-gradient(135deg, #7070ff, #9267f5);
+}
+
+body.dark-theme .btn-danger {
+  background-color: rgba(255, 69, 58, 0.15);
+  border-color: rgba(255, 69, 58, 0.3);
+  color: #ff6b6b;
+}
+
+body.dark-theme .btn-danger:hover {
+  background-color: #ff453a;
+  color: #ffffff;
+}
+
+/* Form Controls & Inputs */
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea,
+body.dark-theme .input-search,
+body.dark-theme .form-control {
+  background-color: #0e0e16;
+  border-color: #28283c;
+  color: #f0f0f8;
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus,
+body.dark-theme .input-search:focus {
+  border-color: #7c7cff;
+  box-shadow: 0 0 0 2px rgba(124, 124, 255, 0.2);
+}
+
+body.dark-theme input::placeholder {
+  color: #55556c;
+}
+
+/* Master Grid Table */
+body.dark-theme .excel-grid th {
+  background-color: #101018;
+  color: #a0a0b8;
+  border-color: #202030;
+}
+
+body.dark-theme .excel-grid td {
+  background-color: #141420;
+  border-color: #1f1f2e;
+  color: #e2e2f0;
+}
+
+body.dark-theme .excel-grid tr:hover td {
+  background-color: #1a1a29;
+}
+
+body.dark-theme .month-bracket-row td {
+  background-color: #0e0e16 !important;
+  border-bottom: 2px solid #242436 !important;
+}
+
+body.dark-theme .month-badge {
+  background-color: #1c1c2b;
+  border-color: #2e2e44;
+  color: #e0e0f0;
+}
+
+body.dark-theme .sub-ledger-row {
+  background-color: #0f0f18 !important;
+}
+
+body.dark-theme .sub-tab-nav {
+  background-color: #0a0a10;
+  border-color: #222234;
+}
+
+body.dark-theme .sub-tab-btn {
+  color: #7a7a92;
+}
+
+body.dark-theme .sub-tab-btn:hover {
+  color: #ffffff;
+}
+
+body.dark-theme .sub-tab-btn.active {
+  background-color: #181826;
+  color: #7c7cff;
+  border-color: #2e2e44;
+}
+
+/* Modals */
+body.dark-theme .modal-backdrop {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+body.dark-theme .modal-header {
+  border-bottom-color: #222234;
+}
+
+body.dark-theme .modal-footer {
+  border-top-color: #222234;
+}
+
+body.dark-theme .modal-title {
+  color: #f5f5fc;
+}
+
+body.dark-theme .modal-close {
+  color: #7a7a92;
+}
+
+body.dark-theme .modal-close:hover {
+  color: #ffffff;
+}
+
+/* SVG Chart Elements */
+body.dark-theme .chart-grid-line {
+  stroke: #1c1c2a;
+}
+
+body.dark-theme .chart-axis-line {
+  stroke: #2a2a3e;
+}
+
+body.dark-theme .chart-label {
+  fill: #7a7a92;
+}
+
+body.dark-theme .chart-bar-expense {
+  fill: #342838;
+}
+
+body.dark-theme .chart-bar-expense:hover {
+  fill: #ff6b6b;
+}
+
+body.dark-theme .chart-dot-revenue {
+  fill: #141420;
+  stroke: #7c7cff;
+}
+
+body.dark-theme .legend-dot.color-revenue {
+  background-color: #7c7cff;
+}
+
+body.dark-theme .legend-dot.color-expense {
+  background-color: #ff6b6b;
+}
+
+/* Mobile Access Panel */
+body.dark-theme .mobile-access-panel {
+  background: rgba(124, 124, 255, 0.06);
+  border-color: rgba(124, 124, 255, 0.16);
+}
+
+body.dark-theme #live-cloud-badge {
+  background: rgba(78, 203, 113, 0.15) !important;
+  border-color: rgba(78, 203, 113, 0.35) !important;
+}
