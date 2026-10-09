@@ -140,6 +140,13 @@
     // 2. Save Data
     saveData: async function (data) {
       if (!data) return false;
+
+      // Safety guard: do not overwrite populated cloud data with empty seed data
+      if ((!data.weeks || Object.keys(data.weeks).length === 0) && localDataSnapshot && localDataSnapshot.weeks && Object.keys(localDataSnapshot.weeks).length > 0) {
+        console.warn('⚠️ Prevented saving empty database over existing data');
+        return false;
+      }
+
       const fbUrl = getFbUrl();
       const profile = getProfile();
       const isPersonal = profile === 'personal';

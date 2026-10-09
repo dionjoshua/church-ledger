@@ -754,7 +754,8 @@ function switchView(viewName) {
   currentView = viewName;
   
   // Update sidebar active states
-  navItems.forEach(item => {
+  const allNavItems = document.querySelectorAll('.nav-item');
+  allNavItems.forEach(item => {
     if (item.getAttribute('data-view') === viewName) {
       item.classList.add('active');
     } else {
@@ -763,11 +764,19 @@ function switchView(viewName) {
   });
 
   // Toggle View Panes
-  Object.keys(views).forEach(key => {
-    if (key === viewName) {
-      views[key].classList.add('active');
-    } else {
-      views[key].classList.remove('active');
+  const allViews = {
+    dashboard: document.getElementById('view-dashboard'),
+    grid: document.getElementById('view-grid'),
+    tenants: document.getElementById('view-tenants'),
+    governance: document.getElementById('view-governance')
+  };
+  Object.keys(allViews).forEach(key => {
+    if (allViews[key]) {
+      if (key === viewName) {
+        allViews[key].classList.add('active');
+      } else {
+        allViews[key].classList.remove('active');
+      }
     }
   });
 
@@ -2453,27 +2462,41 @@ function setupEventListeners() {
     });
   }
 
-  // Navigation tabs
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      switchView(item.getAttribute('data-view'));
+  // Navigation tabs (dynamically queried to ensure all items are found)
+  const allNavItems = document.querySelectorAll('.nav-item');
+  allNavItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetView = item.getAttribute('data-view');
+      if (targetView) {
+        switchView(targetView);
+      }
     });
   });
 
-  // Apple Frameless control calls
-  document.getElementById('win-close').addEventListener('click', () => window.electronAPI.windowClose());
-  document.getElementById('win-minimize').addEventListener('click', () => window.electronAPI.windowMinimize());
+  // Apple Frameless control calls (null-safe for browser mode)
+  const winClose = document.getElementById('win-close');
+  if (winClose) winClose.addEventListener('click', () => window.electronAPI.windowClose());
+  const winMin = document.getElementById('win-minimize');
+  if (winMin) winMin.addEventListener('click', () => window.electronAPI.windowMinimize());
+  const winMax = document.getElementById('win-maximize');
+  if (winMax) winMax.addEventListener('click', () => window.electronAPI.windowMaximize());
 
   // Analytics Filter Event
-  document.getElementById('analytics-filter').addEventListener('change', () => {
-    filterMetrics();
-  });
-  document.getElementById('win-maximize').addEventListener('click', () => window.electronAPI.windowMaximize());
+  const analyticsFilter = document.getElementById('analytics-filter');
+  if (analyticsFilter) {
+    analyticsFilter.addEventListener('change', () => {
+      filterMetrics();
+    });
+  }
 
   // Search input filter
-  gridSearch.addEventListener('input', () => {
-    renderGrid();
-  });
+  const searchInput = document.getElementById('grid-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      renderGrid();
+    });
+  }
 
   // Backup Vault Button
   btnBackup.addEventListener('click', async () => {
@@ -3255,4 +3278,8 @@ function openEditLoanModal(loan) {
 }
 
 // Start application
-window.addEventListener('DOMContentLoaded', init);
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
