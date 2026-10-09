@@ -318,11 +318,28 @@ function startMobileServer() {
     }
 
     // ── Static file serving ──────────────────────────────────────────────
-    // Map "/" → index.html
-    const filePath = (url === '/' || url === '')
-      ? path.join(mobileDir, 'index.html')
-      : path.join(mobileDir, url);
-    serveStatic(res, filePath);
+    if (url === '/mobile' || url === '/mobile/') {
+      return serveStatic(res, path.join(mobileDir, 'index.html'));
+    }
+
+    if (url === '/' || url === '' || url === '/app' || url === '/app/') {
+      return serveStatic(res, path.join(__dirname, 'index.html'));
+    }
+
+    // Check root directory first (e.g. style.css, renderer.js, browser-bridge.js, xlsx.full.min.js)
+    const rootFilePath = path.join(__dirname, url);
+    if (fs.existsSync(rootFilePath) && fs.statSync(rootFilePath).isFile()) {
+      return serveStatic(res, rootFilePath);
+    }
+
+    // Check mobile directory (e.g. mobile/mobile-style.css, mobile/mobile-app.js, icons)
+    const mobileFilePath = path.join(mobileDir, url.replace(/^\/mobile\//, ''));
+    if (fs.existsSync(mobileFilePath) && fs.statSync(mobileFilePath).isFile()) {
+      return serveStatic(res, mobileFilePath);
+    }
+
+    // Default fallback to index.html
+    serveStatic(res, path.join(__dirname, 'index.html'));
   });
 
   server.listen(PORT, '0.0.0.0', async () => {

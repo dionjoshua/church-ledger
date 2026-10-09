@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Church Ledger">
+  <meta name="theme-color" content="#111118">
+  <link rel="apple-touch-icon" href="mobile/icon-192.png">
+  <link rel="icon" type="image/png" href="mobile/icon-192.png">
   <title>Church Administration & Real Estate Ledger</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -635,6 +641,8 @@
     </div>
   </div>
 
+  <script src="xlsx.full.min.js"></script>
+  <script src="browser-bridge.js"></script>
   <script src="renderer.js"></script>
 </body>
 </html>

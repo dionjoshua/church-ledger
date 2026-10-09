@@ -247,21 +247,41 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, 200, { ok: true });
   }
 
-  // ── Static file serving (mobile web app) ───────────────────────────────
-  const filePath = (url === '/' || url === '')
-    ? path.join(MOBILE_DIR, 'index.html')
-    : path.join(MOBILE_DIR, url);
+  // ── Static file serving ───────────────────────────────────────────────
+  if (url === '/mobile' || url === '/mobile/') {
+    return serveStatic(res, path.join(MOBILE_DIR, 'index.html'));
+  }
 
-  const ext  = path.extname(filePath).toLowerCase();
+  if (url === '/' || url === '' || url === '/app' || url === '/app/') {
+    return serveStatic(res, path.join(__dirname, 'index.html'));
+  }
+
+  // Check root directory first (e.g. style.css, renderer.js, browser-bridge.js, xlsx.full.min.js)
+  const rootFilePath = path.join(__dirname, url);
+  if (fs.existsSync(rootFilePath) && fs.statSync(rootFilePath).isFile()) {
+    return serveStatic(res, rootFilePath);
+  }
+
+  // Check mobile directory (e.g. mobile/mobile-style.css, mobile/mobile-app.js, icons)
+  const mobileFilePath = path.join(MOBILE_DIR, url.replace(/^\/mobile\//, ''));
+  if (fs.existsSync(mobileFilePath) && fs.statSync(mobileFilePath).isFile()) {
+    return serveStatic(res, mobileFilePath);
+  }
+
+  // Default SPA fallback to index.html
+  serveStatic(res, path.join(__dirname, 'index.html'));
+});
+
+function serveStatic(res, filePath) {
+  const ext = path.extname(filePath).toLowerCase();
   const mime = MIME[ext] || 'application/octet-stream';
   if (fs.existsSync(filePath)) {
-    res.writeHead(200, { 'Content-Type': mime });
+    res.writeHead(200, { 'Content-Type': mime, 'Access-Control-Allow-Origin': '*' });
     return res.end(fs.readFileSync(filePath));
   }
-  // SPA fallback
-  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-  res.end(fs.readFileSync(path.join(MOBILE_DIR, 'index.html')));
-});
+  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+  res.end(fs.readFileSync(path.join(__dirname, 'index.html')));
+}
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`✅  Church Ledger Cloud Server running on port ${PORT}`);
