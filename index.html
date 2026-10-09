@@ -11,6 +11,12 @@
   <link rel="icon" type="image/png" href="mobile/icon-192.png">
   <title>Church Administration & Real Estate Ledger</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    (function() {
+      var t = localStorage.getItem('church_ledger_theme') || 'dark';
+      if (t === 'dark') document.documentElement.classList.add('dark-theme');
+    })();
+  </script>
 </head>
 <body>
   <!-- Apple Frameless Window Titlebar -->
@@ -26,7 +32,7 @@
         <option value="church">⛪ Redemption House (Church)</option>
         <option value="personal">👤 Personal Ledger</option>
       </select>
-      <button class="btn btn-secondary btn-sm" id="btn-theme-toggle" title="Toggle Light/Dark Theme" style="display:inline-flex;align-items:center;gap:5px;padding:4px 9px;">
+      <button class="btn btn-secondary btn-sm" id="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Theme" style="display:inline-flex;align-items:center;gap:5px;padding:4px 9px;cursor:pointer;">
         <span id="theme-icon">🌙</span> <span id="theme-text" style="font-size:11px;">Dark</span>
       </button>
       <button class="btn btn-secondary btn-sm" id="btn-backup">

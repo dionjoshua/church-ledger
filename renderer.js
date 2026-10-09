@@ -138,32 +138,40 @@ function initTheme() {
 
   const themeBtn = document.getElementById('btn-theme-toggle');
   if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      const current = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      if (currentView === 'dashboard') {
-        renderDashboard();
-      }
-    });
+    themeBtn.onclick = toggleTheme;
   }
 }
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains('dark-theme') || document.body.classList.contains('dark-theme');
+  const next = isDark ? 'light' : 'dark';
+  applyTheme(next);
+  if (typeof renderDashboard === 'function' && currentView === 'dashboard') {
+    try { renderDashboard(); } catch (e) {}
+  }
+}
+window.toggleTheme = toggleTheme;
 
 function applyTheme(theme) {
   const icon = document.getElementById('theme-icon');
   const text = document.getElementById('theme-text');
   if (theme === 'dark') {
+    document.documentElement.classList.add('dark-theme');
     document.body.classList.add('dark-theme');
     localStorage.setItem('church_ledger_theme', 'dark');
     if (icon) icon.textContent = '🌙';
     if (text) text.textContent = 'Dark';
   } else {
+    document.documentElement.classList.remove('dark-theme');
     document.body.classList.remove('dark-theme');
     localStorage.setItem('church_ledger_theme', 'light');
     if (icon) icon.textContent = '☀️';
     if (text) text.textContent = 'Light';
   }
 }
+
+// Apply theme immediately on script load
+try { initTheme(); } catch (e) {}
 
 function applyProfileCustomizations() {
   const isPersonal = activeProfile === 'personal';

@@ -1564,7 +1564,9 @@ input:checked + .toggle-slider:before {
    EXECUTIVE APPLE DARK THEME SYSTEM
    ========================================================================== */
 
-body.dark-theme {
+html.dark-theme,
+body.dark-theme,
+.dark-theme {
   --velvet-black: #0b0b10;
   --velvet-hover: #161624;
   --paper-white: #14141f;
